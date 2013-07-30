@@ -25,6 +25,17 @@ class redis {
         notify  => Service['redis-server'],
     }
 
+    service { "procps":
+      ensure  => "running",
+      enable  => "true",
+    }
+
+    file {'/etc/sysctl.d/10-redis.conf':
+        content => 'vm.overcommit_memory = 1
+',
+        notify => Service['procps'],
+    }
+
     service {'redis-server':
         ensure  => running,
         enable  => true,
